@@ -1,0 +1,83 @@
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-primary);
+}
+
+.cardWatched {
+  border-color: var(--color-success);
+  background: var(--color-success-50);
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.info {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.rating {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.badgeWatched {
+  background: var(--color-success);
+  color: white;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+
+.button {
+  flex: 1;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.button:hover {
+  border-color: var(--color-primary);
+}
+
+.removeButton {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.removeButton:hover {
+  background: var(--color-danger);
+  color: white;
+  border-color: var(--color-danger);
+}
