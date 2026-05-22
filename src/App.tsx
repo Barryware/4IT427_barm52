@@ -1,14 +1,8 @@
 import FilmCard from './components/FilmCard';
+import { useWatchlist } from './hooks/useWatchlist';
+import type { Film } from './types/film.types';
 
-interface Film {
-  title: string;
-  year: number;
-  genre: string;
-  rating: number;
-  watched: boolean;
-}
-
-const films: Film[] = [
+const initialFilms: Film[] = [
   { title: 'Harry Potter a Kámen mudrců', year: 2001, genre: 'Fantasy', rating: 10, watched: true },
   { title: 'Harry Potter a Tajemná komnata', year: 2002, genre: 'Fantasy', rating: 9, watched: true },
   { title: 'Harry Potter a vězeň z Azkabanu', year: 2004, genre: 'Fantasy', rating: 9, watched: true },
@@ -20,13 +14,12 @@ const films: Film[] = [
 ];
 
 function App() {
-  const handleToggleWatched = (title: string) => {
-    console.log(`Změna stavu zhlédnutí pro film: ${title}`);
-  };
+  const { films, toggleWatched, markAllAsWatched } = useWatchlist(initialFilms);
 
   return (
     <div>
       <h1>Můj watchlist</h1>
+      <button onClick={markAllAsWatched}>Označit vše jako zhlédnuté</button>
       {films.map((film) => (
         <FilmCard
           key={film.title}
@@ -35,7 +28,7 @@ function App() {
           genre={film.genre}
           rating={film.rating}
           watched={film.watched}
-          onToggleWatched={handleToggleWatched}
+          onToggleWatched={toggleWatched}
         />
       ))}
     </div>
