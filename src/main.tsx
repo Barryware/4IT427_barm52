@@ -1,9 +1,24 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
+import { WatchlistProvider } from './context/WatchlistContext'
+import type { Film } from './types/film.types'
+
+const initialFilms: Film[] = [
+  { id: 'hp-1', title: 'Harry Potter a Kámen mudrců', year: 2001, genre: 'Fantasy', rating: 10, watched: true },
+  { id: 'hp-2', title: 'Harry Potter a Tajemná komnata', year: 2002, genre: 'Fantasy', rating: 9, watched: true },
+  { id: 'hp-3', title: 'Harry Potter a vězeň z Azkabanu', year: 2004, genre: 'Fantasy', rating: 9, watched: true },
+  { id: 'hp-4', title: 'Harry Potter a Ohnivý pohár', year: 2005, genre: 'Fantasy', rating: 8, watched: true },
+  { id: 'hp-5', title: 'Harry Potter a Fénixův řád', year: 2007, genre: 'Fantasy', rating: 10, watched: true },
+  { id: 'hp-6', title: 'Harry Potter a Princ dvojí krve', year: 2009, genre: 'Fantasy', rating: 8, watched: true },
+  { id: 'hp-7', title: 'Harry Potter a Relikvie smrti - část 1', year: 2010, genre: 'Fantasy', rating: 9, watched: true },
+  { id: 'hp-8', title: 'Harry Potter a Relikvie smrti - část 2', year: 2011, genre: 'Fantasy', rating: 9, watched: true },
+]
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <WatchlistProvider initialFilms={initialFilms}>
+      <App />
+    </WatchlistProvider>
   </StrictMode>,
 )
