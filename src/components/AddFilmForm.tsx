@@ -1,11 +1,14 @@
 import { useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useWatchlist } from '../context/WatchlistContext';
 import styles from './AddFilmForm.module.css';
 
 function AddFilmForm() {
   const { addFilm } = useWatchlist();
+  const navigate = useNavigate();
+  const currentYear = new Date().getFullYear();
   const [title, setTitle] = useState('');
-  const [year, setYear] = useState('');
+  const [year, setYear] = useState(String(currentYear));
   const [genre, setGenre] = useState('');
   const [rating, setRating] = useState('');
 
@@ -24,9 +27,11 @@ function AddFilmForm() {
     });
 
     setTitle('');
-    setYear('');
+    setYear(String(currentYear));
     setGenre('');
     setRating('');
+
+    navigate('/');
   };
 
   return (
@@ -56,9 +61,11 @@ function AddFilmForm() {
           id="film-year"
           className={styles.input}
           type="number"
+          min={1900}
+          max={2100}
           value={year}
           onChange={(event) => setYear(event.target.value)}
-          placeholder="2024"
+          placeholder={String(currentYear)}
           required
         />
       </div>
