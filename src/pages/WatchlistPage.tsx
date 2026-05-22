@@ -3,7 +3,24 @@ import { useWatchlist } from '../context/WatchlistContext';
 import styles from '../App.module.css';
 
 function WatchlistPage() {
-  const { films, toggleWatched, removeFilm, markAllAsWatched } = useWatchlist();
+  const { films, isLoading, isError, refetch, toggleWatched, removeFilm, markAllAsWatched } =
+    useWatchlist();
+
+  if (isLoading) {
+    return <p className={styles.stateMessage}>Načítám…</p>;
+  }
+
+  if (isError) {
+    return (
+      <div className={styles.errorBox}>
+        <p>Nedaří se načíst filmy. Zkontrolujte připojení nebo zkuste to znovu.</p>
+        <button className={styles.markAllButton} onClick={() => refetch()}>
+          Zkusit znovu
+        </button>
+      </div>
+    );
+  }
+
   const watchedCount = films.filter((film) => film.watched).length;
 
   return (

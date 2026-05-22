@@ -1,8 +1,13 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, type ReactNode } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Film } from '../types/film.types';
+import { fetchFilms } from '../api/films';
 
 interface WatchlistContextValue {
   films: Film[];
+  isLoading: boolean;
+  isError: boolean;
+  refetch: () => void;
   addFilm: (film: Omit<Film, 'id' | 'watched'>) => void;
   removeFilm: (id: string) => void;
   toggleWatched: (id: string) => void;
@@ -11,35 +16,47 @@ interface WatchlistContextValue {
 
 const WatchlistContext = createContext<WatchlistContextValue | null>(null);
 
-interface WatchlistProviderProps {
-  children: ReactNode;
-  initialFilms?: Film[];
-}
+const FILMS_QUERY_KEY = ['films'] as const;
 
-export function WatchlistProvider({ children, initialFilms = [] }: WatchlistProviderProps) {
-  const [films, setFilms] = useState<Film[]>(initialFilms);
+export function WatchlistProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
+  const {
+    data: films = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: FILMS_QUERY_KEY,
+    queryFn: fetchFilms,
+  });
+
+  const updateFilms = (updater: (current: Film[]) => Film[]) => {
+    queryClient.setQueryData<Film[]>(FILMS_QUERY_KEY, (current) => updater(current ?? []));
+  };
 
   const addFilm = (filmData: Omit<Film, 'id' | 'watched'>) => {
-    const newFilm: Film = {
-      ...filmData,
-      id: crypto.randomUUID(),
-      watched: false,
-    };
-    setFilms((prev) => [...prev, newFilm]);
+    updateFilms((current) => [
+      ...current,
+      {
+        ...filmData,
+        id: Date.now().toString(),
+        watched: false,
+      },
+    ]);
   };
 
   const removeFilm = (id: string) => {
-    setFilms((prev) => prev.filter((film) => film.id !== id));
+    updateFilms((current) => current.filter((film) => film.id !== id));
   };
 
   const toggleWatched = (id: string) => {
-    setFilms((prev) =>
-      prev.map((film) => (film.id === id ? { ...film, watched: !film.watched } : film))
+    updateFilms((current) =>
+      current.map((film) => (film.id === id ? { ...film, watched: !film.watched } : film))
     );
   };
 
   const markAllAsWatched = () => {
-    setFilms((prev) => prev.map((film) => ({ ...film, watched: true })));
+    updateFilms((current) => current.map((film) => ({ ...film, watched: true })));
   };
 
   useEffect(() => {
@@ -49,7 +66,16 @@ export function WatchlistProvider({ children, initialFilms = [] }: WatchlistProv
 
   return (
     <WatchlistContext.Provider
-      value={{ films, addFilm, removeFilm, toggleWatched, markAllAsWatched }}
+      value={{
+        films,
+        isLoading,
+        isError,
+        refetch,
+        addFilm,
+        removeFilm,
+        toggleWatched,
+        markAllAsWatched,
+      }}
     >
       {children}
     </WatchlistContext.Provider>
